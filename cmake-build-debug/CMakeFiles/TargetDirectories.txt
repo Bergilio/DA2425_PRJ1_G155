@@ -1,3 +1,0 @@
-/home/pedro/CLionProjects/DA2425_PRJ1_G155/cmake-build-debug/CMakeFiles/main.dir
-/home/pedro/CLionProjects/DA2425_PRJ1_G155/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/pedro/CLionProjects/DA2425_PRJ1_G155/cmake-build-debug/CMakeFiles/rebuild_cache.dir
