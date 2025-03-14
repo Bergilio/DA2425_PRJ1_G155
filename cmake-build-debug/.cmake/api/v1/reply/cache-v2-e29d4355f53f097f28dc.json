@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/pedro/CLionProjects/untitled/cmake-build-debug"
+			"value" : "/home/pedro/CLionProjects/DA2425_PRJ1_G155/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -543,7 +543,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/pedro/CLionProjects/untitled/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "/home/pedro/CLionProjects/DA2425_PRJ1_G155/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -603,7 +603,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/pedro/CLionProjects/untitled"
+			"value" : "/home/pedro/CLionProjects/DA2425_PRJ1_G155"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1151,7 +1151,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/pedro/CLionProjects/untitled/cmake-build-debug"
+			"value" : "/home/pedro/CLionProjects/DA2425_PRJ1_G155/cmake-build-debug"
 		},
 		{
 			"name" : "DA2425_PRJ1_G155_IS_TOP_LEVEL",
@@ -1175,7 +1175,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/pedro/CLionProjects/untitled"
+			"value" : "/home/pedro/CLionProjects/DA2425_PRJ1_G155"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",
@@ -1188,42 +1188,6 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "TRUE"
-		},
-		{
-			"name" : "untitled_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/pedro/CLionProjects/untitled/cmake-build-debug"
-		},
-		{
-			"name" : "untitled_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "untitled_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/pedro/CLionProjects/untitled"
 		}
 	],
 	"kind" : "cache",

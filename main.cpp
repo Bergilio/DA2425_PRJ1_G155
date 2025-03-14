@@ -2,11 +2,14 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include "data_structures/GraphMap.h"
+#include "dataParser.cpp"
 
 struct RoutePlan {
 	std::string mode;
 	int source;
 	int destination;
+	int maxWalkTime;
 	std::vector<int> avoidNodes;
 	std::vector<int> includeNodes;
 	std::vector<std::pair<int, int>> avoidSegments;
@@ -26,12 +29,12 @@ void parseInputStr(std::string& input, const std::string& output) {
 	std::cin >> input;
 }
 
-void parseInputInt(int& input, const std::string& output) {
+void parseInputInt(int input, const std::string& output) {
 	std::cout << output;
 	std::cin >> input;
 }
 
-void stringToVector(std::string& s, std::vector<int>& v) {
+void stringToVector(const std::string& s, std::vector<int>& v) {
 	for (auto& c : s) {
 		if (c != ',') {
 			v.push_back(c - '0');
@@ -39,7 +42,7 @@ void stringToVector(std::string& s, std::vector<int>& v) {
 	}
 }
 
-void stringToVectorOfPair(std::string& s, std::vector<std::pair<int, int>>& v) {
+void stringToVectorOfPair(const std::string& s, std::vector<std::pair<int, int>>& v) {
 	std::pair<int, int> holding;
 
 	for (int i = 0; i < s.size(); ++i) {
@@ -57,16 +60,18 @@ RoutePlan showRoutePlanningMenu() {
 	std::string mode;
 	int source;
 	int destination;
+	int maxWalkTime;
 	std::string avoidNodesStr;
 	std::string includeNodesStr;
 	std::string avoidSegmentsStr;
 
-	parseInputStr(mode, "Mode: ");
-	parseInputInt(source, "Source: ");
-	parseInputInt(destination, "Destination: ");
-	parseInputStr(avoidNodesStr, "AvoidNodes: ");
-	parseInputStr(includeNodesStr, "IncludeNodes: ");
-	parseInputStr(avoidSegmentsStr, "AvoidSegments: ");
+	parseInputStr(mode, "Mode:");
+	parseInputInt(source, "Source:");
+	parseInputInt(destination, "Destination:");
+	parseInputInt(maxWalkTime, "MaxWalkTime:");
+	parseInputStr(avoidNodesStr, "AvoidNodes:");
+	parseInputStr(includeNodesStr, "IncludeNodes:");
+	parseInputStr(avoidSegmentsStr, "AvoidSegments:");
 
 	std::vector<int> avoidNodes;
 	std::vector<int> includeNodes;
@@ -77,7 +82,7 @@ RoutePlan showRoutePlanningMenu() {
 
 	stringToVectorOfPair(avoidSegmentsStr, avoidSegments);
 
-	return {mode, source, destination, avoidNodes, includeNodes, avoidSegments};
+	return {mode, source, destination, maxWalkTime, avoidNodes, includeNodes, avoidSegments};
 }
 
 int getMainMenuInput() {
@@ -88,12 +93,18 @@ int getMainMenuInput() {
 }
 
 int main() {
-	int choice;
 	RoutePlan routePlan;
+	Graph * graph = new Graph();
+
 
 	while (true) {
 		showMenu();
-		choice = getMainMenuInput();
+		int choice = getMainMenuInput();
+
+		if (choice == 1) {
+			fileToGraph(graph, "map_data/Locations.csv",
+			            "map_data/Distances.csv");
+		}
 
 		if (choice == 3) {
 			routePlan = showRoutePlanningMenu();

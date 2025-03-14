@@ -8,4 +8,5 @@ include_directories(Main)
 
 set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_TMP} )
 
-add_executable(main main.cpp)
+add_executable(main main.cpp
+        data_structures/GraphMap.cpp)
