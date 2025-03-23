@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "GraphMap.h"
+#include "Graph.h"
 
 struct Location{
 	std::string location;
@@ -22,7 +22,5 @@ struct Distance{
 std::vector<Location> parseLocations(const std::string& filename);
 std::vector<Distance> parseDistances(const std::string& filename);
 void fileToGraph(Graph * graph, const std::string& locationFilename, const std::string& distanceFilename);
-
-
 
 #endif

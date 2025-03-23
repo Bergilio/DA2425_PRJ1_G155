@@ -1,34 +1,42 @@
-#include <string>
-#include "GraphMap.h"
+#include "Graph.h"
 #include "menu.h"
 #include "dataParser.h"
-#include "routePlan.h"
+#include "inputHandler.h"
+#include "algorithms.h"
+#include <iostream>
+#include <fstream>
 
 int main() {
-	RoutePlan routePlan;
+
 	Graph * graph = new Graph();
+	RoutePlan routePlan;
 
 
 	while (true) {
+		fileToGraph(graph, "map_data/Locations.csv",
+						"map_data/Distances.csv");
 		showMenu();
 		int choice = getMainMenuInput();
 
 		if (choice == 1) {
-			fileToGraph(graph, "map_data/Locations.csv",
-			            "map_data/Distances.csv");
-		}
-
-		if (choice == 3) {
-			routePlan = showRoutePlanningMenu();
+			routePlan = fileRoutePlan();
+			std::ofstream outFile("input_output/output.txt");
+			resultMaker(graph, routePlan, outFile);
+			outFile.close();
 			break;
 		}
 
-		if (choice == 4) {
+		if (choice == 2) {
+			routePlan = showRoutePlanningMenu();
+			resultMaker(graph, routePlan, std::cout);
+		}
+
+		if (choice == 3) {
 			break;
 		}
 	}
 
-
+	delete graph;
 
 	return 0;
 }

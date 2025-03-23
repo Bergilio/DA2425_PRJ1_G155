@@ -1,6 +1,8 @@
 #include "dataParser.h"
+#include <iostream>
 #include <fstream>
 #include <sstream>
+#include <climits>
 
 
 std::vector<Location> parseLocations(const std::string& filename) {
@@ -38,7 +40,7 @@ std::vector<Location> parseLocations(const std::string& filename) {
 
         // Parse the parking
 		std::getline(ss, token, ',');
-		location.parking = (token == "1");
+		location.parking = (token[0] == '1');
 
 		locations.push_back(location);
 	}
@@ -79,7 +81,7 @@ std::vector<Distance> parseDistances(const std::string& filename) {
 		// Parse driving
 		std::getline(ss, token, ',');
 		if (token == "X") {
-			distance.driving = -1;
+			distance.driving = INT_MAX;
 		}else {
 			distance.driving = std::stoi(token);
 		}
@@ -94,6 +96,7 @@ std::vector<Distance> parseDistances(const std::string& filename) {
 	file.close();
 	return distances;
 }
+
 
 void fileToGraph(Graph * graph, const std::string& locationFilename, const std::string& distanceFilename) {
 	std::vector<Location> locations = parseLocations(locationFilename);
