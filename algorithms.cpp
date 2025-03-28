@@ -183,10 +183,9 @@ void restrictedRouteInclude(Graph * graph, const RoutePlan &routePlan, std::ostr
 
 // Driving and Walking Route Planning
 
-void drivingWalkingRoute(Graph * graph, const RoutePlan &routePlan, std::ostream& out) {
-	dijkstraWalking(graph, routePlan.destination);
-	std::vector<Route> walkingRoutes;
+// Helper function to compute all walking Routes from the parking spots to the destination
 
+void computeWalkingRoutes(Graph * graph, std::vector<Route> & walkingRoutes, const RoutePlan &routePlan) {
 	for (auto v : graph->getVertexSet()) {
 		if (v->getParking() && v->getDist() <=routePlan.maxWalkTime) {
 			Route route;
@@ -198,12 +197,32 @@ void drivingWalkingRoute(Graph * graph, const RoutePlan &routePlan, std::ostream
 				route.r.push_back(cur->getDest()->getId());
 				cur = cur->getOrig()->getPath();
 			}
-			route.r.push_back(v->getId());
+			route.r.push_back(routePlan.destination);
 
 			route.length = route.r.size();
 
 			walkingRoutes.push_back(route);
 		}
+	}
+}
+
+void drivingWalkingRoute(Graph * graph, const RoutePlan &routePlan, std::ostream& out, bool recursiveCall) {
+ 	dijkstraWalking(graph, routePlan.destination);
+
+	std::vector<Route> walkingRoutes;
+	computeWalkingRoutes(graph, walkingRoutes, routePlan);
+
+	if (walkingRoutes.size() == 0) {
+		out << "DrivingRoute:none" << std::endl;
+		out << "ParkingNode:none" << std::endl;
+		out << "WalkingRoute:none" << std::endl;
+		out << "TotalTime:" << std::endl;
+		out << "Message:No possible route with max. walking time of " << routePlan.maxWalkTime << " minutes." << std::endl;
+		RoutePlan alternativeRoutePlan = routePlan;
+		alternativeRoutePlan.maxWalkTime = INT_MAX;
+		drivingWalkingRoute(graph, alternativeRoutePlan, out, true);
+		drivingWalkingRoute(graph, alternativeRoutePlan, out, true);
+		return;
 	}
 
 	dijkstraDriving(graph, routePlan.source);
@@ -231,7 +250,6 @@ void drivingWalkingRoute(Graph * graph, const RoutePlan &routePlan, std::ostream
 			drivingRoute.r.push_back(routePlan.source);
 			drivingRoute.length = drivingRoute.r.size();
 
-			std::reverse(walkingRoute.r.begin(), walkingRoute.r.end());
 			std::reverse(drivingRoute.r.begin(), drivingRoute.r.end());
 
 			bestDriving = drivingRoute;
@@ -240,9 +258,13 @@ void drivingWalkingRoute(Graph * graph, const RoutePlan &routePlan, std::ostream
 	}
 
 	out << "DrivingRoute:"; printRoute(bestDriving, out);
-	out << "ParkingNode:" << bestWalking.r[0];
+	out << "ParkingNode:" << bestWalking.r[0] << std::endl;
 	out << "WalkingRoute:"; printRoute(bestWalking, out);
-	out << "TotalTime:" << bestWalking.time + bestDriving.time;
+	out << "TotalTime:" << bestWalking.time + bestDriving.time << std::endl;
+
+	if (recursiveCall) {
+		removeNodes(graph, {bestWalking.r[0]});
+	}
 
 
 }

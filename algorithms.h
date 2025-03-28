@@ -14,7 +14,7 @@ void removeSegments(Graph* graph, const std::vector<std::pair<int, int>>& edges)
 void independentRoute(Graph * graph, const RoutePlan &routePlan, std::ostream& out);
 void restrictedRoute(Graph * graph, const RoutePlan &routePlan, std::ostream& out);
 void restrictedRouteInclude(Graph * graph, const RoutePlan &routePlan, std::ostream& out);
-void drivingWalkingRoute(Graph * graph, const RoutePlan &routePlan, std::ostream& out);
+void drivingWalkingRoute(Graph * graph, const RoutePlan &routePlan, std::ostream& out, bool recursiveCall = false);
 void resultMaker(Graph *graph, const RoutePlan &routePlan, std::ostream& out);
 
 #endif //ALGORITHMS_H
