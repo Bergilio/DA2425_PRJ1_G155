@@ -11,7 +11,10 @@ void parseInputStr(std::string& input, const std::string& output) {
 
 void parseInputInt(int &input, const std::string& output) {
 	std::cout << output;
-	std::cin >> input;
+	std::string inputStr;
+	std::cin >> inputStr;
+	if (inputStr == "none") input = -1;
+	else input = std::stoi(inputStr);
 }
 
 void stringToVector(const std::string& s, std::vector<int>& v) {
@@ -42,6 +45,7 @@ void stringToVectorOfPair(const std::string& s, std::vector<std::pair<int, int>>
 
 RoutePlan showRoutePlanningMenu() {
 	RoutePlan routePlan = {"", -1, -1, -1, {}, -1, {}};
+	std::cout << "Write 'none' if you don't want provide information to any of the fields\n\n";
 
 	std::string avoidNodesStr;
 	std::string avoidSegmentsStr;
@@ -60,6 +64,8 @@ RoutePlan showRoutePlanningMenu() {
 
 	stringToVector(avoidNodesStr, routePlan.avoidNodes);
 	stringToVectorOfPair(avoidSegmentsStr, routePlan.avoidSegments);
+
+	std::cout << std::endl;
 
 	return routePlan;
 }
