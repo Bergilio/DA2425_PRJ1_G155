@@ -1,15 +1,4 @@
-Source:8
-Destination:5
-DrivingRoute:none
-ParkingNode:none
-WalkingRoute:none
-TotalTime:
-Message:No possible route with max. walking time of 5 minutes.
-DrivingRoute:8,4,2,3(19)
-ParkingNode:3
-WalkingRoute:3,5(10)
-TotalTime:29
-DrivingRoute:8,4,6(21)
-ParkingNode:6
-WalkingRoute:6,5(10)
-TotalTime:31
+Source:1
+Destination:6
+BestDrivingRoute:1,2,4,6(33)
+BestAlternativeDrivingRoute:none

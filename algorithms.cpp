@@ -3,8 +3,6 @@
 #include <algorithm>
 #include <climits>
 
-// Dijkstra shortest path algorithm implementation for walking times
-
 void dijkstraWalking(Graph * graph, int source) {
 	Vertex * src = graph->findVertexById(source);
 
@@ -23,8 +21,7 @@ void dijkstraWalking(Graph * graph, int source) {
 	MutablePriorityQueue<Vertex> *queue = new MutablePriorityQueue<Vertex>;
 	queue->insert(src);
 
-	while (!queue->empty())
-	{
+	while (!queue->empty()) {
 		auto v = queue->extractMin();
 		v->setVisited(true);
 
@@ -49,8 +46,6 @@ void dijkstraWalking(Graph * graph, int source) {
 	delete queue;
 }
 
-// Dijkstra shortest path algorithm implementation for driving times
-
 void dijkstraDriving(Graph * graph, int source) {
 	Vertex * src = graph->findVertexById(source);
 
@@ -69,8 +64,7 @@ void dijkstraDriving(Graph * graph, int source) {
 	MutablePriorityQueue<Vertex> *queue = new MutablePriorityQueue<Vertex>;
 	queue->insert(src);
 
-	while (!queue->empty())
-	{
+	while (!queue->empty()) {
 		auto v = queue->extractMin();
 		v->setVisited(true);
 
@@ -95,8 +89,6 @@ void dijkstraDriving(Graph * graph, int source) {
 	delete queue;
 }
 
-// Best Driving Route without any restriction
-
 Route bestDrivingRoute(Graph *graph, int source, int destination) {
 	dijkstraDriving(graph, source);
 	Vertex * dest = graph->findVertexById(destination);
@@ -119,10 +111,6 @@ Route bestDrivingRoute(Graph *graph, int source, int destination) {
 
 	return {route, (int)route.size(), time};
 }
-
-
-// Best Alternative Driving Route -> Simply deleting the vertexes and edges that connect to the vertexes
-// that are found between the source and destination in the Best Driving Route. The call bestDrivingRoute() again
 
 Route bestAlternativeDrivingRoute(Graph* graph, Route &route) {
 	for (int i = 1; i < route.length - 1; i++) {
@@ -183,51 +171,38 @@ void restrictedRouteInclude(Graph * graph, const RoutePlan &routePlan, std::ostr
 
 // Driving and Walking Route Planning
 
-// Helper function to compute all walking Routes from the parking spots to the destination
+bool computeWalkingRoutes(Graph * graph, std::vector<Route> & walkingRoutes, const RoutePlan &routePlan) {
+	bool hasParking = false;
 
-void computeWalkingRoutes(Graph * graph, std::vector<Route> & walkingRoutes, const RoutePlan &routePlan) {
 	for (auto v : graph->getVertexSet()) {
-		if (v->getParking() && v->getDist() <=routePlan.maxWalkTime) {
-			Route route;
+		if (v->getParking()) {
+			hasParking = true;
 
-			Edge * cur = v->getPath();
-			route.time = v->getDist();
+			if (v->getDist() <=routePlan.maxWalkTime) {
+				Route route;
 
-			while (cur != nullptr) {
-				route.r.push_back(cur->getDest()->getId());
-				cur = cur->getOrig()->getPath();
+				Edge * cur = v->getPath();
+				route.time = v->getDist();
+
+				while (cur != nullptr) {
+					route.r.push_back(cur->getDest()->getId());
+					cur = cur->getOrig()->getPath();
+				}
+				route.r.push_back(routePlan.destination);
+
+				route.length = route.r.size();
+
+				walkingRoutes.push_back(route);
 			}
-			route.r.push_back(routePlan.destination);
-
-			route.length = route.r.size();
-
-			walkingRoutes.push_back(route);
 		}
 	}
+
+	return hasParking;
 }
 
-void drivingWalkingRoute(Graph * graph, const RoutePlan &routePlan, std::ostream& out, bool recursiveCall) {
- 	dijkstraWalking(graph, routePlan.destination);
+// Helper function to find the best walking and driving routes
 
-	std::vector<Route> walkingRoutes;
-	computeWalkingRoutes(graph, walkingRoutes, routePlan);
-
-	if (walkingRoutes.size() == 0) {
-		out << "DrivingRoute:none" << std::endl;
-		out << "ParkingNode:none" << std::endl;
-		out << "WalkingRoute:none" << std::endl;
-		out << "TotalTime:" << std::endl;
-		out << "Message:No possible route with max. walking time of " << routePlan.maxWalkTime << " minutes." << std::endl;
-		RoutePlan alternativeRoutePlan = routePlan;
-		alternativeRoutePlan.maxWalkTime = INT_MAX;
-		drivingWalkingRoute(graph, alternativeRoutePlan, out, true);
-		drivingWalkingRoute(graph, alternativeRoutePlan, out, true);
-		return;
-	}
-
-	dijkstraDriving(graph, routePlan.source);
-	Route bestDriving = {{}, 0, INT_MAX / 2 - 1};
-	Route bestWalking = {{}, 0, INT_MAX / 2 - 1};
+void bestDrivingWalking(Graph * graph, const std::vector<Route>& walkingRoutes, Route& bestDriving, Route& bestWalking, const RoutePlan& routePlan) {
 	int curWalkingTime = 0;
 
 	for (auto &walkingRoute : walkingRoutes) {
@@ -256,17 +231,53 @@ void drivingWalkingRoute(Graph * graph, const RoutePlan &routePlan, std::ostream
 			bestWalking = walkingRoute;
 		}
 	}
+}
 
-	out << "DrivingRoute:"; printRoute(bestDriving, out);
-	out << "ParkingNode:" << bestWalking.r[0] << std::endl;
-	out << "WalkingRoute:"; printRoute(bestWalking, out);
-	out << "TotalTime:" << bestWalking.time + bestDriving.time << std::endl;
+void drivingWalkingRoute(Graph * graph, const RoutePlan &routePlan, std::ostream& out, bool recursiveCall) {
+ 	dijkstraWalking(graph, routePlan.destination);
+
+	std::vector<Route> walkingRoutes;
+	bool hasParking = computeWalkingRoutes(graph, walkingRoutes, routePlan);
+
+	if (walkingRoutes.size() == 0 && !recursiveCall) {
+		out << "DrivingRoute:none" << std::endl;
+		out << "ParkingNode:none" << std::endl;
+		out << "WalkingRoute:none" << std::endl;
+		out << "TotalTime:" << std::endl;
+		if (hasParking) {
+			out << "Message:No possible route with max. walking time of " << routePlan.maxWalkTime << " minutes." << std::endl;
+		}
+		else {
+			out << "Message:Absence of parking spot." << std::endl;
+		}
+		RoutePlan alternativeRoutePlan = routePlan;
+		alternativeRoutePlan.maxWalkTime = INT_MAX;
+		if (hasParking) {
+			out << std::endl << "Source:" << routePlan.source << std::endl;
+			out << "Destination:" << routePlan.destination << std::endl;
+			drivingWalkingRoute(graph, alternativeRoutePlan, out, true);
+			drivingWalkingRoute(graph, alternativeRoutePlan, out, true);
+		}
+		return;
+	}
+
+	dijkstraDriving(graph, routePlan.source);
+
+	Route bestDriving = {{}, 0, INT_MAX / 2 - 1};
+	Route bestWalking = {{}, 0, INT_MAX / 2 - 1};
+
+	bestDrivingWalking(graph, walkingRoutes, bestDriving, bestWalking, routePlan);
+
+	if (hasParking) {
+		out << "DrivingRoute:"; printRoute(bestDriving, out);
+		out << "ParkingNode:" << bestWalking.r[0] << std::endl;
+		out << "WalkingRoute:"; printRoute(bestWalking, out);
+		out << "TotalTime:" << bestWalking.time + bestDriving.time << std::endl;
+	}
 
 	if (recursiveCall) {
 		removeNodes(graph, {bestWalking.r[0]});
 	}
-
-
 }
 
 

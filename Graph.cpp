@@ -106,7 +106,7 @@ unsigned int Vertex::getIndegree() const {
     return this->indegree;
 }
 
-double Vertex::getDist() const {
+long Vertex::getDist() const {
     return this->dist;
 }
 
@@ -130,7 +130,7 @@ void Vertex::setIndegree(unsigned int indegree) {
     this->indegree = indegree;
 }
 
-void Vertex::setDist(double dist) {
+void Vertex::setDist(long dist) {
     this->dist = dist;
 }
 

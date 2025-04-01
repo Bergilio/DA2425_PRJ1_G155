@@ -45,7 +45,7 @@ void stringToVectorOfPair(const std::string& s, std::vector<std::pair<int, int>>
 
 RoutePlan showRoutePlanningMenu() {
 	RoutePlan routePlan = {"", -1, -1, -1, {}, -1, {}};
-	std::cout << "Write 'none' if you don't want provide information to any of the fields\n\n";
+	std::cout << "Write 'none' if you don't want to fill in the field\n\n";
 
 	std::string avoidNodesStr;
 	std::string avoidSegmentsStr;

@@ -1,9 +1,28 @@
-
-
+/**
+* @file MutablePriorityQueue.h
+ * @brief A mutable priority queue implementation based on a binary heap.
+ *
+ * This class implements a priority queue that supports efficient insertion, extraction, and key decrease
+ * operations, where the priority of an element can be modified during runtime.
+ *
+ * @tparam T The type of elements stored in the priority queue. The type must have:
+ * - An accessible field `int queueIndex`.
+ * - A defined `operator<`.
+ */
 #ifndef DA_TP_CLASSES_MUTABLEPRIORITYQUEUE
 #define DA_TP_CLASSES_MUTABLEPRIORITYQUEUE
 
 #include <vector>
+
+/**
+ * @class MutablePriorityQueue
+ * @brief A mutable priority queue implemented with a binary heap.
+ *
+ * This queue allows the priority of an element to be decreased, and elements can be extracted based on
+ * their priority.
+ *
+ * @tparam T The type of elements stored in the priority queue.
+ */
 
 /**
  * class T must have: (i) accessible field int queueIndex; (ii) operator< defined.

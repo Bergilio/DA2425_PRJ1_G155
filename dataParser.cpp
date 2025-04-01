@@ -110,5 +110,4 @@ void fileToGraph(Graph * graph, const std::string& locationFilename, const std::
 	for (auto& d : distances) {
 		graph->addBidirectionalEdge(d.location1, d.location2, d.driving, d.walking);
 	}
-
 }
